@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cleanup Arena</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="navbar">
+    <div class="nav-brand">⚔️ Cleanup Arena</div>
+    <ul class="nav-links">
+      <li><a href="#" class="nav-link active" data-section="arena">🏟️ Arena</a></li>
+      <li><a href="#" class="nav-link" data-section="inbox">📧 Inbox</a></li>
+      <li><a href="#" class="nav-link" data-section="progress">📊 Progress</a></li>
+    </ul>
+    <div class="nav-hud-controls">
+      <button id="btn-sound-toggle" class="nav-hud-btn" title="Toggle Sound FX (Synthesizer)">
+        <span id="sound-icon">🔊</span>
+      </button>
+      <div class="volume-slider-wrap" title="Sound Volume">
+        <input type="range" id="sound-volume" min="0" max="100" value="70" class="volume-slider">
+      </div>
+      <button id="btn-motion-toggle" class="nav-hud-btn" title="Toggle Combat Animations & Particle FX">
+        <span id="motion-icon">✨</span> <span class="nav-hud-label">FX</span>
+      </button>
+    </div>
+    <div class="nav-profile">
+      <div class="profile-avatar">🧙</div>
+      <span class="profile-name">Hero</span>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <!-- ════════════════ VIEW 1: ARENA VIEW ════════════════ -->
+    <div id="arena-view" class="view-section">
+      <!-- ── Player Dashboard ── -->
+      <section class="dashboard">
+        <div class="stat-card">
+          <span class="stat-label">Level</span>
+          <span class="stat-value" id="player-level">5</span>
+        </div>
+        <div class="stat-card xp-card">
+          <span class="stat-label">XP</span>
+          <div class="progress-bar">
+            <div class="progress-fill xp-fill" id="player-xp-fill" style="width: 65%;" data-value="65"></div>
+          </div>
+          <span class="stat-detail" id="player-xp-detail">1300 / 2000</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Emails Cleaned</span>
+          <span class="stat-value" id="dashboard-cleaned-count">142</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Monsters Defeated</span>
+          <span class="stat-value" id="dashboard-monsters-count">0</span>
+        </div>
+      </section>
+
+      <!-- ── Arena Info ── -->
+      <section class="arena-info">
+        <h1>Welcome to the Arena</h1>
+        <p class="tagline">Fight digital clutter. Protect what matters.</p>
+        <p>Defeat the monsters to reclaim your inbox — each one guards a category of clutter.</p>
+        <div class="cleanup-progress">
+          <span>Overall Cleanup</span>
+          <div class="progress-bar large">
+            <div class="progress-fill cleanup-fill" id="arena-cleanup-fill" style="width: 0%;" data-value="0"></div>
+          </div>
+          <span class="stat-detail" id="arena-cleanup-detail">0% complete</span>
+        </div>
+      </section>
+
+      <!-- ── Monster Arena Grid ── -->
+      <section class="arena-grid">
+
+        <!-- Spam Slime -->
+        <article class="monster-card" data-monster="spam-slime" data-category="spam" id="card-spam-slime">
+          <div class="monster-defeat-overlay" style="display: none;"><span>☠️ DEFEATED</span></div>
+          <div class="monster-art slime-art">
+            <div class="slime-body">
+              <div class="slime-eye left"></div>
+              <div class="slime-eye right"></div>
+              <div class="slime-mouth"></div>
+            </div>
+            <div class="slime-drip drip1"></div>
+            <div class="slime-drip drip2"></div>
+          </div>
+          <h2 class="monster-name">Spam Slime</h2>
+          <span class="monster-category cat-spam">Spam</span>
+          <div class="monster-hp">
+            <span>HP: <strong id="hp-text-spam">15/15</strong></span>
+            <div class="progress-bar">
+              <div class="progress-fill hp-fill hp-spam" id="hp-fill-spam" style="width: 100%;"></div>
+            </div>
+          </div>
+          <p class="pending-count"><span class="badge-count" data-cat-count="spam">15</span> emails pending</p>
+          <button class="btn btn-battle" data-action="battle" data-target="spam">⚔️ Enter Battle</button>
+        </article>
+
+        <!-- Newsletter Hydra -->
+        <article class="monster-card" data-monster="newsletter-hydra" data-category="newsletter" id="card-newsletter-hydra">
+          <div class="monster-defeat-overlay" style="display: none;"><span>☠️ DEFEATED</span></div>
+          <div class="monster-art hydra-art">
+            <div class="hydra-head head-left"></div>
+            <div class="hydra-head head-center"></div>
+            <div class="hydra-head head-right"></div>
+            <div class="hydra-body"></div>
+          </div>
+          <h2 class="monster-name">Newsletter Hydra</h2>
+          <span class="monster-category cat-newsletter">Newsletters</span>
+          <div class="monster-hp">
+            <span>HP: <strong id="hp-text-newsletter">15/15</strong></span>
+            <div class="progress-bar">
+              <div class="progress-fill hp-fill hp-newsletter" id="hp-fill-newsletter" style="width: 100%;"></div>
+            </div>
+          </div>
+          <p class="pending-count"><span class="badge-count" data-cat-count="newsletter">15</span> emails pending</p>
+          <button class="btn btn-battle" data-action="battle" data-target="newsletter">⚔️ Enter Battle</button>
+        </article>
+
+        <!-- Notification Goblin -->
+        <article class="monster-card" data-monster="notification-goblin" data-category="notification" id="card-notification-goblin">
+          <div class="monster-defeat-overlay" style="display: none;"><span>☠️ DEFEATED</span></div>
+          <div class="monster-art goblin-art">
+            <div class="goblin-body">
+              <div class="goblin-ear left"></div>
+              <div class="goblin-ear right"></div>
+              <div class="goblin-eye left"></div>
+              <div class="goblin-eye right"></div>
+              <div class="goblin-nose"></div>
+              <div class="goblin-grin"></div>
+            </div>
+          </div>
+          <h2 class="monster-name">Notification Goblin</h2>
+          <span class="monster-category cat-notification">Notifications</span>
+          <div class="monster-hp">
+            <span>HP: <strong id="hp-text-notification">12/12</strong></span>
+            <div class="progress-bar">
+              <div class="progress-fill hp-fill hp-notification" id="hp-fill-notification" style="width: 100%;"></div>
+            </div>
+          </div>
+          <p class="pending-count"><span class="badge-count" data-cat-count="notification">12</span> emails pending</p>
+          <button class="btn btn-battle" data-action="battle" data-target="notification">⚔️ Enter Battle</button>
+        </article>
+
+        <!-- Important Mail Guardian -->
+        <article class="monster-card guardian-card" data-monster="mail-guardian" data-category="important" id="card-mail-guardian">
+          <div class="monster-art guardian-art">
+            <div class="guardian-shield">
+              <div class="shield-emblem"></div>
+            </div>
+            <div class="guardian-helmet">
+              <div class="helmet-visor"></div>
+            </div>
+          </div>
+          <h2 class="monster-name">Mail Guardian</h2>
+          <span class="monster-category cat-important">Important</span>
+          <div class="monster-hp">
+            <span>Protection: <strong id="hp-text-guardian">70%</strong></span>
+            <div class="progress-bar">
+              <div class="progress-fill hp-fill hp-important" id="protection-fill-guardian" style="width: 70%;"></div>
+            </div>
+          </div>
+          <p class="pending-count"><span class="badge-count" data-cat-count="important">3</span> emails to protect</p>
+          <button class="btn btn-protect" data-action="protect" data-target="important">🛡️ Protect Emails</button>
+        </article>
+
+      </section>
+    </div>
+
+    <!-- ════════════════ VIEW 2: INBOX MANAGEMENT VIEW ════════════════ -->
+    <div id="inbox-view" class="view-section" style="display: none;">
+      
+      <!-- Top Bar: Back to Arena & Battle Context Banner -->
+      <div class="inbox-header-bar">
+        <button id="btn-back-arena" class="btn btn-ghost">⬅ Back to Arena</button>
+        <div id="battle-context-banner" class="battle-banner">
+          <span id="battle-context-icon" class="battle-icon">⚔️</span>
+          <div>
+            <h2 id="battle-context-title">Email Management</h2>
+            <p id="battle-context-subtitle">Inspect and clean your messages to restore order.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guardian Sanctuary Notice (shown for Important category) -->
+      <aside id="guardian-notice" class="guardian-notice" style="display: none;">
+        <span class="notice-icon">🛡️</span>
+        <div class="notice-content">
+          <strong>Guardian Sanctuary — Protection Protocol Active</strong>
+          <p>These messages are flagged as vital. You are protecting and organizing them, not fighting them. Deletion is disabled; use Keep, Star, Archive, or Follow-up actions.</p>
+        </div>
+      </aside>
+
+      <!-- ── Dynamic Boss Battle Stage ── -->
+      <section id="battle-stage" class="battle-stage" aria-label="Active Boss Battle Arena">
+        <!-- Attack Effect Canvas / Animation Theater -->
+        <div id="attack-theater" class="attack-theater" aria-hidden="true"></div>
+
+        <div class="boss-arena-wrapper">
+          <!-- Boss Visual & Pedestal -->
+          <div class="boss-pedestal" id="boss-pedestal">
+            <div class="pedestal-rune"></div>
+            <div id="active-boss-avatar" class="active-boss-avatar">
+              <!-- Dynamically rendered active monster art with idle/hit/attack/defeat states -->
+            </div>
+            <div id="boss-defeat-banner" class="boss-defeat-banner" style="display: none;">
+              <span>☠️ VANQUISHED</span>
+            </div>
+          </div>
+
+          <!-- Boss HUD & Dual Health Bar -->
+          <div class="boss-hud">
+            <div class="boss-header-info">
+              <span class="boss-category-tag" id="boss-hud-category">Spam Boss</span>
+              <h2 class="boss-hud-name" id="boss-hud-name">Spam Slime</h2>
+              <span class="boss-status-pill" id="boss-status-pill">⚔️ Active Boss</span>
+            </div>
+
+            <!-- Dual Health Bar (Instant Bar + Delayed Ghost Bar) -->
+            <div class="boss-hp-box">
+              <div class="boss-hp-labels">
+                <span id="boss-hp-metric-name">Boss Vitality:</span>
+                <span class="boss-hp-values">
+                  <strong id="boss-hp-current">15</strong> / <span id="boss-hp-max">15</span> HP
+                  (<span id="boss-hp-pct">100%</span>)
+                </span>
+              </div>
+              <div class="hp-dual-bar" id="boss-hp-bar">
+                <div class="hp-ghost-fill" id="boss-ghost-fill" style="width: 100%;"></div>
+                <div class="hp-instant-fill hp-spam" id="boss-instant-fill" style="width: 100%;"></div>
+                <div class="hp-danger-overlay" id="boss-danger-overlay"></div>
+              </div>
+            </div>
+
+            <p class="boss-hud-description" id="boss-hud-description">Purge spam messages to deplete the slime's acidic core.</p>
+
+            <div class="boss-hud-controls">
+              <button id="btn-stage-attack" class="btn btn-battle btn-stage-action" disabled>
+                ⚔️ Unleash Attack (<span id="stage-attack-count">0</span> Selected)
+              </button>
+              <button id="btn-toggle-log" class="btn btn-outline-sm btn-stage-action" title="Toggle Combat Log">
+                📜 Combat Log (<span id="combat-log-count">0</span>)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Combat Log -->
+        <div id="combat-log-container" class="combat-log-container">
+          <div class="combat-log-header">
+            <span>⚔️ Combat Event Log</span>
+            <button id="btn-clear-log" class="btn-text-sm">Clear</button>
+          </div>
+          <div id="battle-log-stream" class="battle-log-stream" role="log" aria-live="polite">
+            <div class="log-entry log-system">⚔️ Combat stage active. Select messages below to strike the monster!</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filter & Search Toolbar -->
+      <section class="inbox-toolbar">
+        <div class="toolbar-search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="email-search-input" placeholder="Search sender or subject…" autocomplete="off">
+          <button id="btn-search-clear" class="btn-icon-clear" title="Clear search" style="display: none;">✕</button>
+        </div>
+
+        <div class="toolbar-filters">
+          <!-- Category Pills -->
+          <div class="filter-pills" id="category-pills">
+            <button class="pill active" data-category="all">All <span class="pill-count" id="count-all">52</span></button>
+            <button class="pill" data-category="spam">Spam <span class="pill-count" id="count-spam">15</span></button>
+            <button class="pill" data-category="newsletter">Newsletters <span class="pill-count" id="count-newsletter">15</span></button>
+            <button class="pill" data-category="notification">Notifications <span class="pill-count" id="count-notification">12</span></button>
+            <button class="pill" data-category="important">Important <span class="pill-count" id="count-important">10</span></button>
+          </div>
+
+          <!-- Secondary Filters: Status & Sort -->
+          <div class="toolbar-selects">
+            <div class="select-wrapper">
+              <label for="filter-status">Status:</label>
+              <select id="filter-status" class="custom-select">
+                <option value="all">All Statuses</option>
+                <option value="pending" selected>Pending Action</option>
+                <option value="cleaned">Processed / Protected</option>
+                <option value="starred">Starred Only</option>
+              </select>
+            </div>
+
+            <div class="select-wrapper">
+              <label for="sort-date">Sort:</label>
+              <select id="sort-date" class="custom-select">
+                <option value="newest" selected>Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+
+            <button id="btn-reset-filters" class="btn btn-outline-sm" title="Reset all search and filter options">Reset Filters</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Selection & Bulk Action Bar -->
+      <section class="inbox-actions-bar">
+        <div class="selection-controls">
+          <label class="custom-checkbox-label">
+            <input type="checkbox" id="select-all-checkbox">
+            <span class="checkbox-custom"></span>
+            <span id="select-all-label">Select all visible (<span id="visible-count">0</span>)</span>
+          </label>
+          <span class="selection-badge" id="selection-summary">0 selected</span>
+          <button id="btn-deselect-all" class="btn-link" style="display: none;">Deselect All</button>
+        </div>
+
+        <div class="bulk-buttons">
+          <button id="btn-review-cleanup" class="btn btn-battle" disabled>
+            ⚡ Review Cleanup (<span id="btn-cleanup-count">0</span>)
+          </button>
+        </div>
+      </section>
+
+      <!-- Email List & Interactive Battle Reader Wrapper -->
+      <section class="email-list-container" id="email-list-wrapper">
+        <div class="email-list-split-wrap">
+          <div class="email-list" id="email-list" role="region" aria-label="Email inbox list">
+            <!-- Dynamically populated rows -->
+          </div>
+
+          <!-- Slide-Out / Split Email Reading Panel -->
+          <aside id="email-reader-panel" class="email-reader-panel" style="display: none;" aria-label="Email Inspector">
+            <div class="reader-header">
+              <div class="reader-header-main">
+                <span class="reader-icon" id="reader-icon">📜</span>
+                <div class="reader-title-box">
+                  <h3 id="reader-subject" class="reader-subject">Message Subject</h3>
+                  <div class="reader-meta">
+                    <span id="reader-sender" class="reader-sender">sender@domain.com</span>
+                    <span class="reader-dot">•</span>
+                    <span id="reader-date" class="reader-date">Oct 31</span>
+                  </div>
+                </div>
+              </div>
+              <button id="btn-reader-close" class="reader-close-btn" title="Close Reader">✕</button>
+            </div>
+
+            <div class="reader-body">
+              <div class="reader-pills">
+                <span id="reader-category-badge" class="monster-category cat-spam">Spam</span>
+                <span id="reader-status-badge" class="status-badge">Pending</span>
+              </div>
+
+              <div class="reader-content-box">
+                <span class="reader-label">Message Content:</span>
+                <p id="reader-body-text" class="reader-text"></p>
+              </div>
+            </div>
+
+            <div class="reader-footer">
+              <!-- Clutter Monster Strike Action -->
+              <div id="reader-monster-actions" class="reader-actions-row">
+                <button id="btn-reader-strike" class="btn btn-battle">
+                  ⚔️ Strike Monster with Email (<span id="reader-strike-action">Purge</span>)
+                </button>
+              </div>
+
+              <!-- Mail Guardian Protection Actions -->
+              <div id="reader-guardian-actions" class="reader-actions-row" style="display: none;">
+                <button id="btn-reader-star" class="btn btn-outline-sm" title="Star & Keep">⭐ Star</button>
+                <button id="btn-reader-archive" class="btn btn-outline-sm" title="Archive">📁 Archive</button>
+                <button id="btn-reader-followup" class="btn btn-outline-sm" title="Follow-up">⏰ Follow-up</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Empty State -->
+        <div id="email-empty-state" class="empty-state" style="display: none;">
+          <div class="empty-icon">✨</div>
+          <h3>No emails found</h3>
+          <p id="empty-state-message">No emails match the selected filters or search criteria.</p>
+          <button id="btn-empty-reset" class="btn btn-ghost">Reset Filters</button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ════════════════ VIEW 3: PROGRESS & ACHIEVEMENTS VIEW ════════════════ -->
+    <div id="progress-view" class="view-section" style="display: none;">
+      <div class="progress-hero-banner">
+        <h2>📊 Hero Progression & Arena History</h2>
+        <p>Your journey to Inbox Zero: unlock battle achievements and review executed triage logs.</p>
+      </div>
+
+      <!-- Achievements Section -->
+      <section class="achievements-section">
+        <h3 class="section-title">🏆 Battle Achievements</h3>
+        <div class="achievements-grid" id="achievements-grid">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+      <!-- Cleanup Audit History -->
+      <section class="history-section">
+        <div class="history-header">
+          <h3 class="section-title">📜 Cleanup Event History</h3>
+          <button id="btn-refresh-history" class="btn btn-outline-sm">↻ Refresh Log</button>
+        </div>
+        <div class="history-table-wrap">
+          <table class="modal-preview-table history-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Operation</th>
+                <th>Category</th>
+                <th>Emails Processed</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- ════════════════ CLEANUP PREVIEW & CONFIRMATION MODAL ════════════════ -->
+  <div id="cleanup-modal" class="modal-backdrop" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-icon">⚔️</span>
+          <h3 id="modal-title">Review Cleanup Operation</h3>
+        </div>
+        <button id="btn-modal-close" class="modal-close" aria-label="Close dialog">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-summary-text">
+          You are preparing to execute cleanup on <strong id="modal-affected-count" class="text-gold">0</strong> selected email(s).
+          Estimated reward: <strong id="modal-xp-reward" class="text-gold">+0 XP</strong>.
+        </p>
+
+        <div class="modal-preview-table-wrap">
+          <table class="modal-preview-table">
+            <thead>
+              <tr>
+                <th>Sender</th>
+                <th>Subject</th>
+                <th>Category</th>
+                <th>Proposed Action</th>
+              </tr>
+            </thead>
+            <tbody id="modal-preview-body">
+              <!-- Rendered selected items -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="modal-disclaimer">
+          ⚠️ <strong>Simulation Notice:</strong> This operation simulates local email cleanup in Cleanup Arena. No actual emails will be permanently lost or altered.
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-modal-cancel" class="btn btn-ghost">Cancel</button>
+        <button id="btn-modal-confirm" class="btn btn-battle">⚔️ Confirm Cleanup (<span id="modal-confirm-btn-count">0</span>)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ ARENA VICTORY CLEARED MODAL ════════════════ -->
+  <div id="victory-modal" class="modal-backdrop" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="victory-title">
+    <div class="modal-card victory-card">
+      <div class="victory-header">
+        <span class="victory-crown">👑</span>
+        <h2 id="victory-title">ARENA CLEARED!</h2>
+        <p class="victory-subtitle">All clutter monsters have been decisively vanquished!</p>
+      </div>
+
+      <div class="victory-body">
+        <div class="victory-stats-grid">
+          <div class="victory-stat-item">
+            <span class="v-label">Total Emails Cleaned</span>
+            <span class="v-value" id="victory-cleaned-count">0</span>
+          </div>
+          <div class="victory-stat-item">
+            <span class="v-label">Champion XP Earned</span>
+            <span class="v-value text-gold" id="victory-xp-earned">+250 XP</span>
+          </div>
+          <div class="victory-stat-item">
+            <span class="v-label">Hero Level</span>
+            <span class="v-value" id="victory-hero-level">5</span>
+          </div>
+        </div>
+
+        <div class="victory-message">
+          <p>Your digital workspace is liberated. The <strong>Mail Guardian</strong> continues to safeguard your priority communications in the sanctuary.</p>
+        </div>
+      </div>
+
+      <div class="modal-footer victory-footer">
+        <button id="btn-victory-close" class="btn btn-battle">Reclaim Your Inbox</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
